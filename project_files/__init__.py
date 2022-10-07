@@ -1,5 +1,4 @@
-from os import listdir, mkdir
-from os.path import isdir, isfile
+from os.path import isfile
 import yaml
 
 from . import webpage_generator
@@ -18,7 +17,8 @@ if not isfile('./config.yaml'):
                 }
         }
         yaml.dump(default_config, config_file)
-    print('No config.yaml file found. New config file was generated. Please configure your blog and run the program again.')
+    print('No config.yaml file found. New config file was generated. '
+          'Please configure your blog and run the program again.')
     exit()
 
 with open('config.yaml', 'r') as config_file:
@@ -28,8 +28,12 @@ with open('config.yaml', 'r') as config_file:
 # if not isdir(config['input']['posts directory']):
 #     mkdir(config['input']['posts directory'])
 
+print(config)
 
 # generate index file
 with open('index.html', 'w') as index_file:
     index_file.write(webpage_generator.generate_page(content='Habababa!'))
+
+# generate blog posts
+webpage_generator.generator.generate(config=config)
 print('Your blog was generated successfully!')
