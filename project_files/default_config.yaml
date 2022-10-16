@@ -1,0 +1,5 @@
+config version: 0.1
+
+input directory: ./posts
+
+target directory: ./pages

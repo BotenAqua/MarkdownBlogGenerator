@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="{{ language }}" dir="ltr">
+<html dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title>{{ title }}</title>
+    <title>{{ metadata.title |e }}</title>{# TODO: Fix title #}
   </head>
   <body>
     {% block content %}{% endblock %}

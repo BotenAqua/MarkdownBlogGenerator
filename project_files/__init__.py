@@ -1,24 +1,13 @@
 from os.path import isfile, isdir
-from os import mkdir
+from os import mkdir, listdir
 import yaml
 
 from . import webpage_generator
 
 if not isfile('./config.yaml'):
     with open('config.yaml', 'w') as config_file:
-        default_config = {
-            'config version': 0.1,
-            'target directory': './pages',
-            'input': {
-                'posts directory': './posts'
-                },
-            'output': {
-                'index file location': './',
-                'index file name': 'index.html',
-                'subpages location': './pages'
-                }
-        }
-        yaml.dump(default_config, config_file)
+        with open('project_files/default_config.yaml', 'r') as default_config:
+            config_file.write(default_config.read())
     print('No config.yaml file found. New config file was generated. '
           'Please configure your blog and run the program again.')
     exit()
@@ -26,11 +15,9 @@ if not isfile('./config.yaml'):
 with open('config.yaml', 'r') as config_file:
     config = yaml.load(config_file, yaml.FullLoader)
 
-# TODO: missing directories and files creation
-# if not isdir(config['input']['posts directory']):
-#     mkdir(config['input']['posts directory'])
 if not isdir(config['target directory']):
     mkdir(config['target directory'])
+    print('Generated target directory.')
 
 webGen = webpage_generator.WebpageGenerator(config)
 
@@ -38,6 +25,10 @@ webGen = webpage_generator.WebpageGenerator(config)
 webGen.generate_index()
 
 # generate blog posts
-webGen.generate_post('test.html')
+# TODO: check subdirs for md files
+for el in listdir(config['input directory']):
+    if isfile(config['input directory']+'/'+el) and el[-3:] == '.md':
+        webGen.generate_post(el)
+        print('Generatated post from ' + el)
 
 print('Your blog was generated successfully!')
