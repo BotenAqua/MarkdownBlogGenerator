@@ -1,4 +1,5 @@
-from os.path import isfile
+from os.path import isfile, isdir
+from os import mkdir
 import yaml
 
 from . import webpage_generator
@@ -7,6 +8,7 @@ if not isfile('./config.yaml'):
     with open('config.yaml', 'w') as config_file:
         default_config = {
             'config version': 0.1,
+            'target directory': './pages',
             'input': {
                 'posts directory': './posts'
                 },
@@ -27,13 +29,15 @@ with open('config.yaml', 'r') as config_file:
 # TODO: missing directories and files creation
 # if not isdir(config['input']['posts directory']):
 #     mkdir(config['input']['posts directory'])
+if not isdir(config['target directory']):
+    mkdir(config['target directory'])
 
-print(config)
+webGen = webpage_generator.WebpageGenerator(config)
 
 # generate index file
-with open('index.html', 'w') as index_file:
-    index_file.write(webpage_generator.generate_page(content='Habababa!'))
+webGen.generate_index()
 
 # generate blog posts
-webpage_generator.generator.generate(config=config)
+webGen.generate_post('test.html')
+
 print('Your blog was generated successfully!')
